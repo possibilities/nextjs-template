@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { ThemeProvider } from '@/lib/theme-provider'
 import './globals.css'
+import './debug.css'
 
 export const metadata: Metadata = {
   title: 'Arthack NextJs Template',
