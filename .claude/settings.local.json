@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm exec tailwindcss:*)",
+      "Bash(pnpm run dev:*)",
+      "Bash(pnpm:*)",
+      "Bash(pnpm list:*)",
+      "mcp__ui__ui_list_components",
+      "mcp__ui__ui_show_typography_help",
+      "mcp__ui__ui_show_dark_mode_help",
+      "mcp__ui__ui_show_component_details",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx:*)",
+      "WebFetch(domain:lucide.dev)",
+      "mcp__github__create_repository",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": []
+  }
+}
