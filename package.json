@@ -1,7 +1,7 @@
 {
-  "name": "ui-composer-nextjs-template",
+  "name": "nextjs-template",
   "version": "0.1.0",
-  "description": "UI Composer NextJs Template",
+  "description": "NextJs Template",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

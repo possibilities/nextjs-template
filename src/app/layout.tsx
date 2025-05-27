@@ -4,8 +4,8 @@ import './globals.css'
 import './debug.css'
 
 export const metadata: Metadata = {
-  title: 'Arthack NextJs Template',
-  description: 'A minimal NextJs template',
+  title: 'NextJs Template',
+  description: 'NextJs template',
 }
 
 console.warn(
