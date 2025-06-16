@@ -8,10 +8,6 @@ export const metadata: Metadata = {
   description: 'NextJs template',
 }
 
-console.warn(
-  'TODO: we load all tweakcn related fonts, remove all but chosen theme font',
-)
-
 export default function RootLayout({
   children,
 }: Readonly<{
