@@ -1,7 +1,7 @@
 {
   "name": "nextjs-template",
   "version": "0.1.0",
-  "description": "NextJs Template",
+  "description": "NextJS Template CLI",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

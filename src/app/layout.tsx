@@ -4,8 +4,8 @@ import './globals.css'
 import './debug.css'
 
 export const metadata: Metadata = {
-  title: 'NextJs Template',
-  description: 'NextJs template',
+  title: 'NextJS Template',
+  description: 'NextJS Template',
 }
 
 export default function RootLayout({
