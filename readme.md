@@ -1,1 +1,1 @@
-# NextJS Template CLI
+# NextJS Template
