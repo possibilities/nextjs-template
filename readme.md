@@ -1,1 +1,1 @@
-# NextJS Template
+# PROJECT_TITLE
