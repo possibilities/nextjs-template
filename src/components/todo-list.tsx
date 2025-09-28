@@ -23,16 +23,24 @@ export function TodoList() {
 
   const initPouchDB = async () => {
     if (!db && typeof window !== 'undefined') {
+      console.log('Initializing PouchDB...')
       const PouchDB = (await import('pouchdb-browser')).default
       db = new PouchDB('todos')
+      console.log('PouchDB initialized:', db)
+    } else {
+      console.log('PouchDB already initialized or not in browser')
     }
   }
 
   const loadTodos = async () => {
-    if (!db) return
+    if (!db) {
+      console.log('Database not initialized yet')
+      return
+    }
 
     try {
       setLoading(true)
+      console.log('Loading todos from database...')
       const result = await db.allDocs({
         include_docs: true,
         startkey: 'todo_',
@@ -40,12 +48,15 @@ export function TodoList() {
         descending: true
       })
 
+      console.log('Raw database result:', result)
+
       const todosList = result.rows
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((row: any) => row.doc as TodoDoc)
         .filter((doc: TodoDoc) => doc && doc.text)
         .sort((a: TodoDoc, b: TodoDoc) => b.createdAt - a.createdAt)
 
+      console.log('Processed todos list:', todosList)
       setTodos(todosList)
       setError(null)
     } catch (err) {
@@ -85,12 +96,16 @@ export function TodoList() {
     if (!newTodo.trim() || !db) return
 
     try {
-      await db.put({
+      console.log('Adding todo:', newTodo.trim())
+      const result = await db.put({
         _id: `todo_${Date.now()}`,
         text: newTodo.trim(),
         createdAt: Date.now()
       })
+      console.log('Todo added successfully:', result)
       setNewTodo('')
+      // Manually reload todos after adding
+      await loadTodos()
     } catch (err) {
       console.error('Error adding todo:', err)
       setError('Failed to add todo')
