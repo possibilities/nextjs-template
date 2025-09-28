@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import PouchDB from 'pouchdb-browser'
 import { Plus } from 'lucide-react'
 import { TodoItem } from './todo-item'
 
@@ -12,15 +11,26 @@ interface TodoDoc {
   createdAt: number
 }
 
-const db = new PouchDB('todos')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let db: any = null
 
 export function TodoList() {
   const [newTodo, setNewTodo] = useState('')
   const [todos, setTodos] = useState<TodoDoc[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  const initPouchDB = async () => {
+    if (!db && typeof window !== 'undefined') {
+      const PouchDB = (await import('pouchdb-browser')).default
+      db = new PouchDB('todos')
+    }
+  }
 
   const loadTodos = async () => {
+    if (!db) return
+
     try {
       setLoading(true)
       const result = await db.allDocs({
@@ -31,9 +41,10 @@ export function TodoList() {
       })
 
       const todosList = result.rows
-        .map(row => row.doc as TodoDoc)
-        .filter(doc => doc && doc.text)
-        .sort((a, b) => b.createdAt - a.createdAt)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((row: any) => row.doc as TodoDoc)
+        .filter((doc: TodoDoc) => doc && doc.text)
+        .sort((a: TodoDoc, b: TodoDoc) => b.createdAt - a.createdAt)
 
       setTodos(todosList)
       setError(null)
@@ -46,24 +57,32 @@ export function TodoList() {
   }
 
   useEffect(() => {
-    loadTodos()
+    const init = async () => {
+      await initPouchDB()
+      setMounted(true)
+      await loadTodos()
 
-    const changes = db.changes({
-      since: 'now',
-      live: true,
-      include_docs: true
-    }).on('change', () => {
-      loadTodos()
-    })
+      if (db) {
+        const changes = db.changes({
+          since: 'now',
+          live: true,
+          include_docs: true
+        }).on('change', () => {
+          loadTodos()
+        })
 
-    return () => {
-      changes.cancel()
+        return () => {
+          changes.cancel()
+        }
+      }
     }
+
+    init()
   }, [])
 
   const addTodo = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newTodo.trim()) return
+    if (!newTodo.trim() || !db) return
 
     try {
       await db.put({
@@ -79,6 +98,8 @@ export function TodoList() {
   }
 
   const deleteTodo = async (id: string) => {
+    if (!db) return
+
     try {
       const doc = await db.get(id)
       await db.remove(doc)
@@ -88,7 +109,7 @@ export function TodoList() {
     }
   }
 
-  if (loading) {
+  if (!mounted || loading) {
     return (
       <div className="w-full max-w-md mx-auto p-6">
         <div className="text-center text-gray-500 dark:text-gray-400">Loading todos...</div>
