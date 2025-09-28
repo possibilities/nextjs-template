@@ -42,10 +42,7 @@ export function TodoList() {
       setLoading(true)
       console.log('Loading todos from database...')
       const result = await db.allDocs({
-        include_docs: true,
-        startkey: 'todo_',
-        endkey: 'todo_\uffff',
-        descending: true
+        include_docs: true
       })
 
       console.log('Raw database result:', result)
@@ -53,7 +50,7 @@ export function TodoList() {
       const todosList = result.rows
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((row: any) => row.doc as TodoDoc)
-        .filter((doc: TodoDoc) => doc && doc.text)
+        .filter((doc: TodoDoc) => doc && doc._id && doc._id.startsWith('todo_') && doc.text)
         .sort((a: TodoDoc, b: TodoDoc) => b.createdAt - a.createdAt)
 
       console.log('Processed todos list:', todosList)
